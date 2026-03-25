@@ -1,0 +1,59 @@
+{
+  "name": "syne-management-bot",
+  "version": "1.0.0",
+  "description": "SYNΞ Advanced Discord Management Bot — Modular Monolith Architecture",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "npx tsx src/index.ts",
+    "dev:sharded": "npx tsx src/shard.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "start:sharded": "npx tsx src/shard.ts",
+    "pm2:start": "pm2 start ecosystem.config.cjs",
+    "pm2:stop": "pm2 stop syne-bot",
+    "pm2:logs": "pm2 logs syne-bot",
+    "docker:up": "docker compose up -d --build",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f bot",
+    "prisma:generate": "prisma generate",
+    "prisma:push": "prisma db push",
+    "prisma:migrate": "prisma migrate deploy",
+    "prisma:studio": "prisma studio",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "management",
+    "moderation"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.5.0",
+    "@prisma/client": "^5.22.0",
+    "@sapphire/decorators": "^6.2.0",
+    "@sapphire/discord.js-utilities": "^7.3.3",
+    "@sapphire/framework": "^5.5.0",
+    "@sapphire/plugin-hmr": "^3.0.2",
+    "@sapphire/plugin-logger": "^4.1.0",
+    "@sapphire/plugin-scheduled-tasks": "^10.0.4",
+    "@sapphire/plugin-subcommands": "^7.0.1",
+    "@sapphire/ts-config": "^5.0.3",
+    "@sapphire/utilities": "^3.18.2",
+    "discord.js": "^14.25.1",
+    "dotenv": "^17.3.1",
+    "ioredis": "^5.10.1",
+    "pg": "^8.20.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "@types/pg": "^8.20.0",
+    "prisma": "^5.22.0",
+    "ssh2-sftp-client": "^12.1.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2"
+  }
+}

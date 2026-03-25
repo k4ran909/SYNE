@@ -1,0 +1,122 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Infraction Types ───────────────────────────────────────────
+enum InfractionType {
+  WARN
+  MUTE
+  KICK
+  BAN
+  UNMUTE
+  UNBAN
+}
+
+// ─── Guild Configuration ────────────────────────────────────────
+model GuildConfig {
+  id        String   @id @default(cuid())
+  guildId   String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Logging channels
+  modLogChannelId       String?
+  messageLogChannelId   String?
+  joinLeaveLogChannelId String?
+
+  // Auto-role
+  autoRoleIds String[] @default([])
+
+  // Automod settings
+  automodEnabled       Boolean  @default(true)
+  antiSpamEnabled      Boolean  @default(true)
+  antiSpamMaxMessages  Int      @default(5)
+  antiSpamInterval     Int      @default(5000)
+  blockedWords         String[] @default([])
+  blockedLinks         String[] @default([])
+
+  // Anti-raid settings
+  antiRaidEnabled      Boolean @default(true)
+  antiRaidThreshold    Int     @default(30)
+  antiRaidWindow       Int     @default(10000)
+  beastModeActive      Boolean @default(false)
+
+  // Anti-nuke settings
+  antiNukeEnabled      Boolean @default(true)
+  antiNukeMaxActions   Int     @default(3)
+  antiNukeWindow       Int     @default(10000)
+
+  // Verification
+  verificationEnabled   Boolean @default(false)
+  verificationChannelId String?
+  verificationRoleId    String?
+
+  // Escalation thresholds
+  warnThresholdForMute Int @default(3)
+  warnThresholdForKick Int @default(5)
+  warnThresholdForBan  Int @default(7)
+
+  // Relations
+  infractions Infraction[]
+  backups     ServerBackup[]
+  rolePanels  RolePanel[]
+
+  @@map("guild_configs")
+}
+
+// ─── Infractions (Moderation Actions) ────────────────────────────
+model Infraction {
+  id          String         @id @default(cuid())
+  guildId     String
+  userId      String
+  moderatorId String
+  type        InfractionType
+  reason      String
+  duration    Int?
+  expiresAt   DateTime?
+  active      Boolean        @default(true)
+  createdAt   DateTime       @default(now())
+
+  guild GuildConfig @relation(fields: [guildId], references: [guildId], onDelete: Cascade)
+
+  @@index([guildId, userId])
+  @@index([guildId, moderatorId])
+  @@index([expiresAt])
+  @@index([active, expiresAt])
+  @@map("infractions")
+}
+
+// ─── Server Backups ──────────────────────────────────────────────
+model ServerBackup {
+  id        String   @id @default(cuid())
+  guildId   String
+  createdBy String
+  data      Json
+  createdAt DateTime @default(now())
+
+  guild GuildConfig @relation(fields: [guildId], references: [guildId], onDelete: Cascade)
+
+  @@index([guildId])
+  @@map("server_backups")
+}
+
+// ─── Role Panels (Button/Dropdown Roles) ─────────────────────────
+model RolePanel {
+  id        String   @id @default(cuid())
+  guildId   String
+  channelId String
+  messageId String   @unique
+  roles     Json
+  mode      String   @default("toggle")
+  createdAt DateTime @default(now())
+
+  guild GuildConfig @relation(fields: [guildId], references: [guildId], onDelete: Cascade)
+
+  @@index([guildId])
+  @@map("role_panels")
+}
