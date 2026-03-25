@@ -12,6 +12,7 @@ const manager = new ShardingManager(join(__dirname, 'index.ts'), {
   token,
   totalShards: 'auto',   // Discord determines optimal shard count
   respawn: true,           // Auto-restart crashed shards
+  execArgv: ['--import', 'tsx'],  // Enable TypeScript execution in child processes
 });
 
 // ─── Shard Lifecycle Events ─────────────────────────────────────
