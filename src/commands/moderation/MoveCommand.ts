@@ -1,4 +1,4 @@
-import { Command } from '@sapphire/framework';
+import { Command, Args } from '@sapphire/framework';
 import { PermissionFlagsBits, type Message } from 'discord.js';
 import { successEmbed, errorEmbed } from '../../lib/utils';
 
@@ -14,7 +14,7 @@ export class MoveCommand extends Command {
   }
 
   // ─── Prefix command: !mv @user ─────────────────────────────────
-  public override async messageRun(message: Message, args: Command.Args) {
+  public override async messageRun(message: Message, args: Args) {
     if (!message.guild || !message.member) return;
 
     // Parse the target user

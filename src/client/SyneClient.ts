@@ -1,5 +1,6 @@
 import { SapphireClient, LogLevel } from '@sapphire/framework';
 import { GatewayIntentBits, Partials } from 'discord.js';
+// @ts-ignore - TS5.x moduleResolution node10 deprecation typing issue
 import '@sapphire/plugin-logger/register';
 import { redis } from '../lib/redis';
 import { prisma } from '../lib/database';
