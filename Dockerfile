@@ -12,6 +12,7 @@ COPY prisma ./prisma
 # Copy source and build
 COPY tsconfig.json .
 COPY src ./src
+RUN npx prisma generate
 RUN npm run build
 
 # ─── Production image ────────────────────────────────────────────
