@@ -8,11 +8,12 @@ if (!token) {
   process.exit(1);
 }
 
-const manager = new ShardingManager(join(__dirname, 'index.ts'), {
+const extension = __filename.endsWith('.ts') ? 'ts' : 'js';
+const manager = new ShardingManager(join(__dirname, `index.${extension}`), {
   token,
   totalShards: 'auto',   // Discord determines optimal shard count
   respawn: true,           // Auto-restart crashed shards
-  execArgv: ['--import', 'tsx'],  // Enable TypeScript execution in child processes
+  execArgv: extension === 'ts' ? ['--import', 'tsx'] : [],  // Only use tsx in dev
 });
 
 // ─── Shard Lifecycle Events ─────────────────────────────────────
