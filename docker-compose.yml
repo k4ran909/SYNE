@@ -3,7 +3,11 @@ services:
   bot:
     build: .
     container_name: syne-bot
-    env_file: .env
+    environment:
+      DISCORD_TOKEN: ${DISCORD_TOKEN}
+      BOT_OWNER_IDS: ${BOT_OWNER_IDS:-733592459480662016}
+      DATABASE_URL: postgresql://syne:${DB_PASSWORD:-syne_secure_password}@postgres:5432/syne_bot
+      REDIS_URL: redis://redis:6379
     depends_on:
       postgres:
         condition: service_healthy
